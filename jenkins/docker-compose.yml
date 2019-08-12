@@ -1,0 +1,30 @@
+version: '3'
+
+networks:
+  devopsjenkins:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  jenkins-data-higo:
+  jenkins-sonar-higo:
+
+services:
+  jenkins:
+    container_name: jenkins
+    user: root
+    image: jenkinsci/blueocean
+    restart: "always"
+    ports:
+      - 8888:8080
+    networks:
+      devopsjenkins:
+        ipv4_address: 172.20.128.2
+    volumes:
+      - jenkins-data-higo:/var/jenkins_home
+      - jenkins-sonar-higo:/root/.sonar/native-sonar-scanner
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $HOME:/home
+    environment: 
+      JAVA_OPTS: -Duser.timezone=America/Fortaleza
